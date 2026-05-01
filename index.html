@@ -1166,10 +1166,14 @@ async function explainJargon() {
       })
     });
     const d = await res.json();
-    text.textContent = d.text || 'Could not explain this term.';
+    if (!res.ok) {
+      text.textContent = 'Error: ' + (d.error || `Server returned ${res.status}`);
+    } else {
+      text.textContent = d.text || 'No response received. Please try again.';
+    }
     result.classList.add('show');
   } catch (e) {
-    text.textContent = 'Unable to load explanation. Please try again.';
+    text.textContent = 'Unable to reach the server: ' + e.message;
     result.classList.add('show');
   }
   load.classList.remove('show');
