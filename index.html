@@ -609,6 +609,167 @@
     border-top: 1px solid var(--border);
     margin-top: 1rem;
   }
+
+  /* ---- MOBILE RESPONSIVE ---- */
+  @media (max-width: 480px) {
+    /* Header */
+    header {
+      padding: 0 1rem;
+      height: auto;
+      min-height: 56px;
+      flex-wrap: nowrap;
+      gap: 8px;
+    }
+    .logo {
+      font-size: 1.1rem;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .mode-toggle {
+      flex-shrink: 0;
+    }
+    .mode-btn {
+      padding: 5px 10px;
+      font-size: 0.75rem;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 2rem 1rem 1.5rem;
+    }
+    .hero h1 {
+      font-size: 1.7rem;
+    }
+    .hero p {
+      font-size: 0.88rem;
+    }
+
+    /* Mode desc */
+    .mode-desc {
+      margin: 1rem 1rem 0;
+      font-size: 0.82rem;
+    }
+
+    /* Tabs */
+    .tabs {
+      padding: 0 0.5rem;
+      gap: 0;
+    }
+    .tab {
+      padding: 10px 10px;
+      font-size: 0.78rem;
+    }
+
+    /* Panels */
+    .panel {
+      padding: 1rem;
+    }
+
+    /* Cards */
+    .card {
+      padding: 1rem;
+    }
+
+    /* Chat */
+    .chat-messages {
+      height: 260px;
+    }
+    .chat-input-row input {
+      font-size: 0.85rem;
+    }
+
+    /* Result rows */
+    .result-row {
+      flex-direction: column;
+      gap: 2px;
+    }
+    .result-row .value {
+      font-size: 0.95rem;
+    }
+
+    /* Two col */
+    .two-col {
+      grid-template-columns: 1fr;
+    }
+
+    /* Popup */
+    .popup {
+      padding: 1.5rem;
+    }
+
+    /* Quiz options */
+    .quiz-opt {
+      font-size: 0.85rem;
+      padding: 10px 12px;
+    }
+
+    /* Buttons */
+    .btn {
+      font-size: 0.85rem;
+      padding: 10px 16px;
+    }
+  }
+
+  /* ---- MOBILE RESPONSIVE ---- */
+  @media (max-width: 480px) {
+
+    /* Fix overflow */
+    html, body { overflow-x: hidden; width: 100%; }
+
+    /* Header */
+    header {
+      padding: 0 1rem;
+      height: auto;
+      min-height: 56px;
+      flex-wrap: nowrap;
+      gap: 8px;
+    }
+    .logo {
+      font-size: 1.1rem;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .mode-toggle { flex-shrink: 0; }
+    .mode-btn {
+      padding: 5px 10px;
+      font-size: 0.75rem;
+    }
+
+    /* Hero */
+    .hero { padding: 2rem 1rem 1.5rem; }
+    .hero h1 { font-size: 1.7rem; }
+    .hero p { font-size: 0.9rem; }
+
+    /* Mode desc */
+    .mode-desc { margin: 1rem 1rem 0; font-size: 0.85rem; }
+
+    /* Tabs */
+    .tabs { padding: 0 0.5rem; }
+    .tab { padding: 10px 12px; font-size: 0.8rem; }
+
+    /* Panels */
+    .panel { padding: 1rem; }
+
+    /* Cards */
+    .card { padding: 1rem; }
+
+    /* Chat */
+    .chat-messages { height: 260px; }
+    .chat-input-row input { font-size: 0.85rem; }
+
+    /* Two col stays single on mobile */
+    .two-col { grid-template-columns: 1fr; }
+
+    /* Result rows */
+    .result-row { flex-direction: column; gap: 2px; }
+    .result-row .value { font-size: 0.95rem; }
+
+    /* Quiz options */
+    .quiz-opt { font-size: 0.85rem; padding: 10px 12px; }
+
+    /* Popup */
+    .popup { padding: 1.5rem; }
+  }
 </style>
 </head>
 <body>
@@ -1166,14 +1327,10 @@ async function explainJargon() {
       })
     });
     const d = await res.json();
-    if (!res.ok) {
-      text.textContent = 'Error: ' + (d.error || `Server returned ${res.status}`);
-    } else {
-      text.textContent = d.text || 'No response received. Please try again.';
-    }
+    text.textContent = d.text || 'Could not explain this term.';
     result.classList.add('show');
   } catch (e) {
-    text.textContent = 'Unable to reach the server: ' + e.message;
+    text.textContent = 'Unable to load explanation. Please try again.';
     result.classList.add('show');
   }
   load.classList.remove('show');
