@@ -41,7 +41,7 @@ export default async function handler(req) {
   const groqMessages = [systemMessage, ...messages];
 
   const groqBody = {
-    model: 'llama3-8b-8192',
+    model: 'llama-3.1-8b-instant',
     messages: groqMessages,
     max_tokens: 1024,
     temperature: 0.7
