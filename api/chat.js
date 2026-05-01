@@ -33,10 +33,12 @@ export default async function handler(req) {
     });
   }
 
-  const contents = messages.map(m => ({
-    role: m.role === 'assistant' ? 'model' : 'user',
-    parts: [{ text: m.content }]
-  }));
+  const contents = messages.map(function(m) {
+    return {
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }]
+    };
+  });
 
   const systemInstruction = system
     ? { parts: [{ text: system }] }
@@ -44,13 +46,13 @@ export default async function handler(req) {
 
   const geminiBody = {
     system_instruction: systemInstruction,
-    contents,
+    contents: contents,
     generationConfig: { maxOutputTokens: 1024, temperature: 0.7 }
   };
 
   try {
     const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key=${apiKey}`,
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b-001:generateContent?key=' + apiKey,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -61,21 +63,28 @@ export default async function handler(req) {
     const data = await geminiRes.json();
 
     if (!geminiRes.ok) {
-      return new Response(JSON.stringify({ text: `DEBUG GEMINI ERROR: ${JSON.stringify(data)}` }), {
+      return new Response(JSON.stringify({ text: 'DEBUG GEMINI ERROR: ' + JSON.stringify(data) }), {
         status: 200,
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
       });
     }
 
-    const text = data.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || `DEBUG EMPTY RESPONSE: ${JSON.stringify(data)}`;
+    var text = '';
+    if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+      text = data.candidates[0].content.parts.map(function(p) { return p.text || ''; }).join('');
+    }
 
-    return new Response(JSON.stringify({ text }), {
+    if (!text) {
+      text = 'DEBUG EMPTY RESPONSE: ' + JSON.stringify(data);
+    }
+
+    return new Response(JSON.stringify({ text: text }), {
       status: 200,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
 
   } catch (err) {
-    return new Response(JSON.stringify({ text: `DEBUG EXCEPTION: ${err.message}` }), {
+    return new Response(JSON.stringify({ text: 'DEBUG EXCEPTION: ' + err.message }), {
       status: 200,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
