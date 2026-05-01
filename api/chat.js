@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -7,38 +6,31 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  // Basic rate limiting via Vercel Edge (IP-based, in-memory per instance)
-  // For production, replace with Upstash Redis or similar
   const { messages, system } = req.body;
 
   if (!messages || !Array.isArray(messages)) {
-    return res.status(400).json({ error: 'Invalid request body' });
+    return res.status(400).json({ error: 'Invalid request body', received: req.body });
   }
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: 'API key not configured' });
+    return res.status(500).json({ error: 'API key not configured — GEMINI_API_KEY is missing' });
   }
 
   try {
-    // Build Gemini-compatible contents array
     const contents = messages.map(m => ({
       role: m.role === 'assistant' ? 'model' : 'user',
       parts: [{ text: m.content }]
     }));
 
-    // Prepend system prompt as first user turn if provided
     const systemInstruction = system
       ? { parts: [{ text: system }] }
-      : { parts: [{ text: 'You are NaijaTax IQ, a knowledgeable Nigerian tax assistant. Answer questions about Nigerian taxation accurately and helpfully.' }] };
+      : { parts: [{ text: 'You are NaijaTax IQ, a knowledgeable Nigerian tax assistant.' }] };
 
     const geminiBody = {
       system_instruction: systemInstruction,
       contents,
-      generationConfig: {
-        maxOutputTokens: 1024,
-        temperature: 0.7,
-      }
+      generationConfig: { maxOutputTokens: 1024, temperature: 0.7 }
     };
 
     const geminiRes = await fetch(
@@ -53,18 +45,24 @@ export default async function handler(req, res) {
     const data = await geminiRes.json();
 
     if (!geminiRes.ok) {
-      console.error('Gemini error:', data);
-      return res.status(geminiRes.status).json({ error: data.error?.message || 'Gemini API error' });
+      return res.status(200).json({ 
+        text: `DEBUG ERROR: ${JSON.stringify(data)}`,
+        raw: data
+      });
     }
 
-    // Extract text from Gemini response
     const text = data.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
 
-    // Return in a shape the frontend can use easily
+    if (!text) {
+      return res.status(200).json({ 
+        text: `DEBUG EMPTY: ${JSON.stringify(data)}`,
+        raw: data
+      });
+    }
+
     return res.status(200).json({ text });
 
   } catch (err) {
-    console.error('Server error:', err);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(200).json({ text: `DEBUG EXCEPTION: ${err.message}` });
   }
 }
