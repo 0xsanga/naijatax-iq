@@ -1,40 +1,56 @@
-export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+export const config = { runtime: 'edge' };
 
-  if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+export default async function handler(req) {
+  if (req.method === 'OPTIONS') {
+    return new Response(null, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      }
+    });
+  }
 
-  const { messages, system } = req.body;
-
-  if (!messages || !Array.isArray(messages)) {
-    return res.status(400).json({ error: 'Invalid request body', received: req.body });
+  if (req.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
   }
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: 'API key not configured — GEMINI_API_KEY is missing' });
+    return new Response(JSON.stringify({ text: 'DEBUG: GEMINI_API_KEY is not set' }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
   }
 
+  const body = await req.json();
+  const { messages, system } = body;
+
+  if (!messages || !Array.isArray(messages)) {
+    return new Response(JSON.stringify({ text: 'DEBUG: invalid messages array' }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+
+  const contents = messages.map(m => ({
+    role: m.role === 'assistant' ? 'model' : 'user',
+    parts: [{ text: m.content }]
+  }));
+
+  const systemInstruction = system
+    ? { parts: [{ text: system }] }
+    : { parts: [{ text: 'You are NaijaTax IQ, a knowledgeable Nigerian tax assistant. Answer questions about Nigerian taxation accurately and helpfully.' }] };
+
+  const geminiBody = {
+    system_instruction: systemInstruction,
+    contents,
+    generationConfig: { maxOutputTokens: 1024, temperature: 0.7 }
+  };
+
   try {
-    const contents = messages.map(m => ({
-      role: m.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: m.content }]
-    }));
-
-    const systemInstruction = system
-      ? { parts: [{ text: system }] }
-      : { parts: [{ text: 'You are NaijaTax IQ, a knowledgeable Nigerian tax assistant.' }] };
-
-    const geminiBody = {
-      system_instruction: systemInstruction,
-      contents,
-      generationConfig: { maxOutputTokens: 1024, temperature: 0.7 }
-    };
-
     const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -45,24 +61,23 @@ export default async function handler(req, res) {
     const data = await geminiRes.json();
 
     if (!geminiRes.ok) {
-      return res.status(200).json({ 
-        text: `DEBUG ERROR: ${JSON.stringify(data)}`,
-        raw: data
+      return new Response(JSON.stringify({ text: `DEBUG GEMINI ERROR: ${JSON.stringify(data)}` }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
       });
     }
 
-    const text = data.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
+    const text = data.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || `DEBUG EMPTY RESPONSE: ${JSON.stringify(data)}`;
 
-    if (!text) {
-      return res.status(200).json({ 
-        text: `DEBUG EMPTY: ${JSON.stringify(data)}`,
-        raw: data
-      });
-    }
-
-    return res.status(200).json({ text });
+    return new Response(JSON.stringify({ text }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
 
   } catch (err) {
-    return res.status(200).json({ text: `DEBUG EXCEPTION: ${err.message}` });
+    return new Response(JSON.stringify({ text: `DEBUG EXCEPTION: ${err.message}` }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
   }
 }
