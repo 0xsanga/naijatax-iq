@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NaijaTax IQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00a651;
+    --green-dark: #007a3d;
+    --green-light: #e6f7ee;
+    --white: #00a651;
+    --gold: #f5a623;
+    --gold-light: #fff8ec;
+    --dark: #0d1f0f;
+    --mid: #1e3a22;
+    --text: #1a2e1c;
+    --muted: #5a7a5e;
+    --bg: #f4faf5;
+    --card: #ffffff;
+    --border: #c8e6d0;
+    --red: #e03e3e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ---- HEADER ---- */
+  header {
+    background: var(--dark);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid var(--green);
+  }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.4rem;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: var(--gold); }
+
+  .mode-toggle {
+    display: flex;
+    background: var(--mid);
+    border-radius: 30px;
+    padding: 4px;
+    gap: 4px;
+  }
+  .mode-btn {
+    padding: 6px 18px;
+    border-radius: 24px;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    transition: all 0.25s;
+    color: #aac8ae;
+    background: transparent;
+  }
+  .mode-btn.active {
+    background: var(--green);
+    color: #fff;
+  }
+
+  /* ---- HERO ---- */
+  .hero {
+    background: linear-gradient(135deg, var(--dark) 0%, var(--mid) 100%);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,166,81,0.15) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    border-radius: 50%;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(245,166,35,0.15);
+    color: var(--gold);
+    border: 1px solid rgba(245,166,35,0.3);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.15;
+    margin-bottom: 0.75rem;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero p {
+    color: #8fb895;
+    font-size: 1rem;
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ---- MODE DESCRIPTION ---- */
+  .mode-desc {
+    background: var(--green-light);
+    border-left: 4px solid var(--green);
+    margin: 1.5rem 1.5rem 0;
+    padding: 0.9rem 1.2rem;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.9rem;
+    color: var(--green-dark);
+    font-weight: 500;
+  }
+
+  /* ---- NAV TABS ---- */
+  .tabs {
+    display: flex;
+    overflow-x: auto;
+    gap: 0;
+    padding: 0 1.5rem;
+    margin-top: 1.5rem;
+    border-bottom: 2px solid var(--border);
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    padding: 10px 18px;
+    border: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.87rem;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+  }
+  .tab.active {
+    color: var(--green-dark);
+    border-bottom-color: var(--green);
+    font-weight: 600;
+  }
+  .tab:hover:not(.active) { color: var(--text); }
+
+  /* ---- PANELS ---- */
+  .panel { display: none; padding: 1.5rem; }
+  .panel.active { display: block; }
+
+  /* ---- CARDS ---- */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.4rem;
+    margin-bottom: 1.2rem;
+  }
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .icon {
+    width: 28px; height: 28px;
+    background: var(--green-light);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+  }
+
+  /* ---- FORM ELEMENTS ---- */
+  label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 5px;
+    margin-top: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  label:first-child { margin-top: 0; }
+  input, select, textarea {
+    width: 100%;
+    padding: 10px 13px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    color: var(--text);
+    background: #fff;
+    transition: border 0.2s;
+    outline: none;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--green); }
+  textarea { resize: vertical; min-height: 80px; }
+
+  .btn {
+    display: inline-block;
+    padding: 11px 22px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    margin-top: 1rem;
+  }
+  .btn-primary {
+    background: var(--green);
+    color: #fff;
+    width: 100%;
+  }
+  .btn-primary:hover { background: var(--green-dark); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+  .btn-gold {
+    background: var(--gold);
+    color: #fff;
+  }
+  .btn-gold:hover { background: #d4891a; }
+  .btn-outline {
+    background: transparent;
+    border: 1.5px solid var(--green);
+    color: var(--green-dark);
+  }
+
+  /* ---- RESULT BOX ---- */
+  .result-box {
+    background: var(--green-light);
+    border: 1.5px solid var(--green);
+    border-radius: 10px;
+    padding: 1.2rem;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--dark);
+    display: none;
+  }
+  .result-box.show { display: block; }
+  .result-box h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: var(--green-dark);
+  }
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(0,166,81,0.15);
+    font-size: 0.88rem;
+  }
+  .result-row:last-child { border-bottom: none; }
+  .result-row .label { color: var(--muted); }
+  .result-row .value { font-weight: 600; color: var(--dark); }
+  .result-row.total .label,
+  .result-row.total .value { color: var(--green-dark); font-weight: 700; font-size: 1rem; }
+
+  /* ---- AI RESPONSE ---- */
+  .ai-response {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: var(--text);
+    display: none;
+    white-space: pre-wrap;
+  }
+  .ai-response.show { display: block; }
+  .ai-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ai-label::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .loading {
+    display: none;
+    text-align: center;
+    padding: 1.5rem;
+    color: var(--muted);
+    font-size: 0.87rem;
+  }
+  .loading.show { display: block; }
+  .spinner {
+    width: 28px; height: 28px;
+    border: 3px solid var(--border);
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---- FUN FACT ---- */
+  .fun-fact {
+    background: linear-gradient(135deg, #fff8ec, #fff3d6);
+    border: 1.5px solid var(--gold);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.2rem;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .fun-fact-icon { font-size: 1.4rem; flex-shrink: 0; }
+  .fun-fact-body {}
+  .fun-fact-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+  }
+  .fun-fact-text { font-size: 0.88rem; color: var(--text); line-height: 1.55; }
+
+  /* ---- QUIZ ---- */
+  .quiz-question {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-opt {
+    padding: 11px 15px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    text-align: left;
+    transition: all 0.2s;
+    color: var(--text);
+  }
+  .quiz-opt:hover { border-color: var(--green); background: var(--green-light); }
+  .quiz-opt.correct { border-color: var(--green); background: var(--green-light); color: var(--green-dark); font-weight: 600; }
+  .quiz-opt.wrong { border-color: var(--red); background: #fef2f2; color: var(--red); }
+  .quiz-feedback {
+    margin-top: 1rem;
+    padding: 0.9rem 1rem;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct { background: var(--green-light); color: var(--green-dark); border: 1px solid var(--green); }
+  .quiz-feedback.wrong { background: #fef2f2; color: var(--red); border: 1px solid var(--red); }
+  .quiz-score {
+    text-align: center;
+    padding: 1.5rem;
+    background: var(--green-light);
+    border-radius: 12px;
+    margin-top: 1rem;
+    display: none;
+  }
+  .quiz-score.show { display: block; }
+  .quiz-score .score-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--green-dark);
+  }
+  .quiz-score p { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+
+  /* ---- CHAT ---- */
+  .chat-messages {
+    height: 320px;
+    overflow-y: auto;
+    padding: 1rem;
+    background: #f8fdf9;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .msg {
+    max-width: 88%;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+  .msg.user {
+    background: var(--green);
+    color: #fff;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+  .msg.ai {
+    background: #fff;
+    color: var(--text);
+    border: 1px solid var(--border);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+    white-space: pre-wrap;
+  }
+  .msg.typing {
+    background: #fff;
+    border: 1px solid var(--border);
+    align-self: flex-start;
+    padding: 14px;
+  }
+  .dots span {
+    display: inline-block;
+    width: 7px; height: 7px;
+    background: var(--muted);
+    border-radius: 50%;
+    margin: 0 2px;
+    animation: bounce 1.2s infinite;
+  }
+  .dots span:nth-child(2) { animation-delay: 0.2s; }
+  .dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+  .chat-input-row {
+    display: flex;
+    gap: 8px;
+  }
+  .chat-input-row input { margin: 0; flex: 1; }
+  .chat-send {
+    padding: 10px 16px;
+    background: var(--green);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+  .chat-send:hover { background: var(--green-dark); }
+
+  /* ---- GLOSSARY ---- */
+  .glossary-result {
+    display: none;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+  .glossary-result.show { display: block; }
+
+  /* ---- TAGS ---- */
+  .tag {
+    display: inline-block;
+    background: var(--green-light);
+    color: var(--green-dark);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+  .tag.gold { background: var(--gold-light); color: #a06b00; }
+
+  /* ---- UPDATES ---- */
+  .update-item {
+    border-left: 3px solid var(--green);
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.8rem;
+    background: #fff;
+    border-radius: 0 8px 8px 0;
+  }
+  .update-date { font-size: 0.72rem; color: var(--gold); font-weight: 600; text-transform: uppercase; margin-bottom: 3px; }
+  .update-title { font-weight: 600; font-size: 0.9rem; color: var(--dark); margin-bottom: 4px; }
+  .update-body { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+  /* ---- POPUP ---- */
+  .popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(13,31,15,0.6);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+  .popup-overlay.show { display: flex; }
+  .popup {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 380px;
+    width: 100%;
+    position: relative;
+    animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .popup-close {
+    position: absolute;
+    top: 12px; right: 14px;
+    background: none; border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--muted);
+  }
+  .popup-emoji { font-size: 2.5rem; margin-bottom: 0.75rem; }
+  .popup h3 { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; }
+  .popup p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+
+  /* ---- PROFESSIONAL EXTRAS ---- */
+  .pro-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--dark);
+    color: var(--gold);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 1.2rem 0;
+  }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 400px) { .two-col { grid-template-columns: 1fr; } }
+
+  .small-note {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  footer {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    color: var(--muted);
+    font-size: 0.78rem;
+    border-top: 1px solid var(--border);
+    margin-top: 1rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Naija<span>Tax</span> IQ</div>
+  <div class="mode-toggle">
+    <button class="mode-btn active" onclick="setMode('general')">General</button>
+    <button class="mode-btn" onclick="setMode('pro')">Professional</button>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-badge">🇳🇬 Nigerian Tax Intelligence</div>
+  <h1>Tax made <span>simple.</span><br>Decisions made <span>smart.</span></h1>
+  <p>Your AI-powered guide to Nigerian tax — calculate, learn, ask questions, and stay updated.</p>
+</div>
+
+<div class="mode-desc" id="modeDesc">
+  📌 <strong>General Mode:</strong> Plain English explanations, simple calculators, and everyday tax guidance for every Nigerian.
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="showTab('calculator')">🧮 Calculator</button>
+  <button class="tab" onclick="showTab('explainer')">📖 Jargon Buster</button>
+  <button class="tab" onclick="showTab('quiz')">🎯 Quiz</button>
+  <button class="tab" onclick="showTab('updates')">📰 Updates</button>
+  <button class="tab" onclick="showTab('chat')">💬 Ask AI</button>
+</div>
+
+<!-- ===== CALCULATOR PANEL ===== -->
+<div class="panel active" id="panel-calculator">
+
+  <div class="fun-fact" id="calcFunFact">
+    <div class="fun-fact-icon">💡</div>
+    <div class="fun-fact-body">
+      <div class="fun-fact-label">Fun Fact</div>
+      <div class="fun-fact-text" id="funFactText">Nigeria's tax-to-GDP ratio is around 10% — one of the lowest in Africa. The global average is about 15%. FIRS has been working hard to change this story.</div>
+    </div>
+  </div>
+
+  <!-- Tax Type Selector -->
+  <div class="card">
+    <div class="card-title"><div class="icon">⚙️</div> Choose Tax Type</div>
+    <label>What do you want to calculate?</label>
+    <select id="taxType" onchange="switchCalculator()">
+      <option value="paye">PAYE (Personal Income Tax — Employed)</option>
+      <option value="pit">PIT (Personal Income Tax — Self-Employed/Freelancer)</option>
+      <option value="vat">VAT (Value Added Tax)</option>
+      <option value="cit">CIT (Companies Income Tax)</option>
+    </select>
+  </div>
+
+  <!-- PAYE CALCULATOR -->
+  <div class="card" id="calc-paye">
+    <div class="card-title"><div class="icon">👤</div> PAYE Calculator</div>
+    <label>Annual Gross Salary (₦)</label>
+    <input type="number" id="paye-salary" placeholder="e.g. 3600000" min="0">
+    <label>Annual Pension Contribution (₦) <span style="color:var(--muted);font-weight:400;font-size:0.78rem;">— 8% of Basic+Housing+Transport is standard</span></label>
+    <input type="number" id="paye-pension" placeholder="e.g. 288000" min="0">
+    <label>Annual Rent Paid (₦) <span style="color:var(--muted);font-weight:400;font-size:0.78rem;">— new NTA 2025 deduction (20% of rent, max ₦500,000)</span></label>
+    <input type="number" id="paye-rent" placeholder="e.g. 1200000" min="0">
+    <div class="small-note" id="payeNote">NTA 2025: CRA is abolished. New deduction = Rent Relief (20% of annual rent, capped at ₦500,000) + Pension. First ₦800,000 of taxable income is tax-free.</div>
+    <button class="btn btn-primary" onclick="calculatePAYE()">Calculate My PAYE</button>
+    <div class="loading" id="paye-loading"><div class="spinner"></div>Crunching the numbers...</div>
+    <div class="result-box" id="paye-result"></div>
+    <div class="ai-response" id="paye-ai"></div>
+  </div>
+
+  <!-- SELF-EMPLOYED PIT CALCULATOR -->
+  <div class="card" id="calc-pit" style="display:none">
+    <div class="card-title"><div class="icon">💼</div> Self-Employed / Freelancer PIT</div>
+    <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;">Unlike salaried workers, self-employed Nigerians calculate and file their own Personal Income Tax directly with their State Internal Revenue Service.</p>
+    <label>Annual Gross Income (₦) — total revenue from your business/freelance work</label>
+    <input type="number" id="pit-income" placeholder="e.g. 6000000" min="0">
+    <label>Annual Business Expenses (₦) — rent, data, tools, transport, etc.</label>
+    <input type="number" id="pit-expenses" placeholder="e.g. 1200000" min="0">
+    <label>Annual Pension Contribution (₦) <span style="color:var(--muted);font-weight:400;font-size:0.78rem;">— optional but deductible</span></label>
+    <input type="number" id="pit-pension" placeholder="e.g. 0" min="0">
+    <label>Annual Rent Paid (₦) <span style="color:var(--muted);font-weight:400;font-size:0.78rem;">— NTA 2025: 20% deductible, max ₦500,000</span></label>
+    <input type="number" id="pit-rent" placeholder="e.g. 600000" min="0">
+    <div class="small-note" id="pitNote">NTA 2025: Your taxable income = Gross Income − Business Expenses − Pension − Rent Relief (20% of rent, max ₦500,000). First ₦800,000 of taxable income is tax-free. File with your State IRS by March 31 each year.</div>
+    <button class="btn btn-primary" onclick="calculatePIT()">Calculate My PIT</button>
+    <div class="loading" id="pit-loading"><div class="spinner"></div>Crunching the numbers...</div>
+    <div class="result-box" id="pit-result"></div>
+    <div class="ai-response" id="pit-ai"></div>
+  </div>
+
+  <!-- VAT CALCULATOR -->
+  <div class="card" id="calc-vat" style="display:none">
+    <div class="card-title"><div class="icon">🛒</div> VAT Calculator</div>
+    <label>Amount (₦)</label>
+    <input type="number" id="vat-amount" placeholder="e.g. 50000" min="0">
+    <label>What do you want to find?</label>
+    <select id="vat-direction">
+      <option value="add">Add VAT to this amount (exclusive → inclusive)</option>
+      <option value="remove">Remove VAT from this amount (inclusive → exclusive)</option>
+    </select>
+    <div class="small-note">Current VAT rate in Nigeria: <strong>7.5%</strong> (Nigeria Tax Act 2025 — rate unchanged). Essential goods (food, medicine, education) are zero-rated.</div>
+    <button class="btn btn-primary" onclick="calculateVAT()">Calculate VAT</button>
+    <div class="result-box" id="vat-result"></div>
+    <div class="ai-response" id="vat-ai"></div>
+  </div>
+
+  <!-- CIT CALCULATOR -->
+  <div class="card" id="calc-cit" style="display:none">
+    <div class="card-title"><div class="icon">🏢</div> CIT Calculator</div>
+    <label>Annual Taxable Profit (₦)</label>
+    <input type="number" id="cit-profit" placeholder="e.g. 10000000" min="0">
+    <label>Company Size</label>
+    <select id="cit-size">
+      <option value="small">Small (Turnover ≤ ₦100M AND fixed assets ≤ ₦250M) — 0% CIT</option>
+      <option value="large">Other Companies (above threshold or professional services) — 25% CIT</option>
+    </select>
+    <div class="small-note" id="citNote">NTA 2025: Small company threshold raised from ₦25M to ₦100M turnover. CIT rate for other companies reduced to 25%. A new 4% Development Levy also applies to non-small companies (replaces TET, IT Levy, NASENI, Police Fund levies). Note: professional services firms do NOT qualify for the small company exemption.</div>
+    <button class="btn btn-primary" onclick="calculateCIT()">Calculate CIT</button>
+    <div class="result-box" id="cit-result"></div>
+    <div class="ai-response" id="cit-ai"></div>
+  </div>
+
+</div>
+
+<!-- ===== JARGON BUSTER PANEL ===== -->
+<div class="panel" id="panel-explainer">
+  <div class="fun-fact">
+    <div class="fun-fact-icon">🤓</div>
+    <div class="fun-fact-body">
+      <div class="fun-fact-label">Did You Know?</div>
+      <div class="fun-fact-text">The Nigerian tax system has over 40 different taxes across federal, state, and local levels. No wonder it gets confusing!</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="icon">📖</div> Jargon Buster</div>
+    <p style="font-size:0.88rem;color:var(--muted);margin-bottom:1rem;">Type any tax term, acronym, or phrase you've seen in a tax document or law — we'll break it down in plain language.</p>
+    <label>Enter a tax term or phrase</label>
+    <input type="text" id="jargon-input" placeholder="e.g. withholding tax, CITA, assessable profit..." maxlength="200">
+    <div style="margin-top:0.75rem;">
+      <span style="font-size:0.78rem;color:var(--muted);">Common searches:</span><br>
+      <span class="tag" style="cursor:pointer;margin-top:6px;" onclick="quickJargon('Withholding Tax')">Withholding Tax</span>
+      <span class="tag" style="cursor:pointer;" onclick="quickJargon('Capital Gains Tax')">Capital Gains Tax</span>
+      <span class="tag" style="cursor:pointer;" onclick="quickJargon('TIN')">TIN</span>
+      <span class="tag" style="cursor:pointer;" onclick="quickJargon('Transfer Pricing')">Transfer Pricing</span>
+      <span class="tag" style="cursor:pointer;" onclick="quickJargon('Pioneer Status')">Pioneer Status</span>
+      <span class="tag gold" style="cursor:pointer;" onclick="quickJargon('Base Erosion and Profit Shifting')">BEPS</span>
+    </div>
+    <button class="btn btn-primary" onclick="explainJargon()">Explain This Term</button>
+    <div class="loading" id="jargon-loading"><div class="spinner"></div>Looking that up...</div>
+    <div class="glossary-result" id="jargon-result">
+      <div class="ai-label">NaijaTax IQ Explains</div>
+      <div id="jargon-text"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== QUIZ PANEL ===== -->
+<div class="panel" id="panel-quiz">
+  <div class="fun-fact">
+    <div class="fun-fact-icon">🏆</div>
+    <div class="fun-fact-body">
+      <div class="fun-fact-label">Challenge Yourself</div>
+      <div class="fun-fact-text">Tax laws in Nigeria change frequently. The Finance Act has been updated multiple times since 2019. Stay sharp!</div>
+    </div>
+  </div>
+
+  <div class="card" id="quiz-container">
+    <div class="card-title"><div class="icon">🎯</div> Tax Knowledge Quiz <span id="quiz-mode-badge"></span></div>
+    <div id="quiz-progress" style="font-size:0.78rem;color:var(--muted);margin-bottom:1rem;"></div>
+    <div class="quiz-question" id="quiz-q"></div>
+    <div class="quiz-options" id="quiz-opts"></div>
+    <div class="quiz-feedback" id="quiz-feedback"></div>
+    <button class="btn btn-primary" id="quiz-next-btn" style="display:none;" onclick="nextQuiz()">Next Question →</button>
+    <div class="quiz-score" id="quiz-score">
+      <div class="score-num" id="score-display"></div>
+      <p id="score-msg"></p>
+      <button class="btn btn-primary" style="margin-top:1rem;" onclick="startQuiz()">Try Again</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="icon">🎲</div> Quiz Mode</div>
+    <div class="two-col">
+      <button class="btn btn-outline" onclick="setQuizMode('general'); startQuiz()">General Public</button>
+      <button class="btn btn-outline" onclick="setQuizMode('pro'); startQuiz()">Professional</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== UPDATES PANEL ===== -->
+<div class="panel" id="panel-updates">
+  <div class="card">
+    <div class="card-title"><div class="icon">📰</div> Recent Tax Updates & Trends</div>
+    <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1.2rem;">Key developments in Nigerian tax law and FIRS policy you should know about.</p>
+
+    <div class="update-item">
+      <div class="update-date">Nigeria Tax Act 2025 — Effective Jan 1, 2026</div>
+      <div class="update-title">PAYE Overhaul: CRA Abolished, New Tax Bands</div>
+      <div class="update-body">The Consolidated Relief Allowance is gone. It is replaced by a Rent Relief (20% of annual rent, capped at ₦500,000). New progressive bands: 0% on first ₦800,000, then 15%–25% on higher income. Top rate reduced from 24% to 25% but structured more progressively.</div>
+    </div>
+
+    <div class="update-item">
+      <div class="update-date">Nigeria Tax Act 2025 — Effective Jan 1, 2026</div>
+      <div class="update-title">Small Company CIT Threshold Raised to ₦100M</div>
+      <div class="update-body">Small companies are now defined as those with annual turnover not exceeding ₦100M AND fixed assets not exceeding ₦250M. They are fully exempt from CIT, CGT, and the new Development Levy. Note: professional services firms do NOT qualify for this exemption.</div>
+    </div>
+
+    <div class="update-item">
+      <div class="update-date">Nigeria Tax Act 2025 — Effective Jan 1, 2026</div>
+      <div class="update-title">New 4% Development Levy Replaces Multiple Taxes</div>
+      <div class="update-body">The Tertiary Education Tax (2.5%), IT Levy, NASENI Levy, and Police Trust Fund Levy are all consolidated into a single 4% Development Levy on assessable profits. Simplifies compliance but effectively increases the levy burden for some companies.</div>
+    </div>
+
+    <div class="update-item">
+      <div class="update-date">Nigeria Tax Act 2025 — Effective Jan 1, 2026</div>
+      <div class="update-title">FIRS Renamed: Now Nigeria Revenue Service (NRS)</div>
+      <div class="update-body">The Federal Inland Revenue Service (FIRS) has been restructured and renamed the Nigeria Revenue Service (NRS). TIN is now mandatory for all financial transactions, with an individual's NIN serving as their Tax ID. A new Tax Ombuds office handles taxpayer complaints independently.</div>
+    </div>
+
+    <div class="update-item">
+      <div class="update-date">Nigeria Tax Act 2025 — Effective Jan 1, 2026</div>
+      <div class="update-title">Digital Economy Taxation Expanded</div>
+      <div class="update-body">Non-resident companies providing digital services to Nigerian consumers must register with the NRS, charge VAT, and remit accordingly. This affects streaming platforms, app stores, SaaS providers, and cloud services. E-invoicing (fiscalisation) is now mandatory for VAT-registered businesses.</div>
+    </div>
+
+    <div class="update-item">
+      <div class="update-date">Nigeria Tax Act 2025 — Effective Jan 1, 2026</div>
+      <div class="update-title">CIT Rate Reduced to 25% for Non-Small Companies</div>
+      <div class="update-body">The previous two-tier structure (20% medium, 30% large) is replaced by a single 25% rate for all non-small companies. This applies from the 2026 year of assessment. CGT for companies is now also taxed at the CIT rate (30% → 25%), while CGT for individuals follows the same progressive PIT bands.</div>
+    </div>
+
+    <div class="divider"></div>
+    <label>Ask AI about any of these updates</label>
+    <input type="text" id="update-q" placeholder="e.g. How does digital VAT affect my business?">
+    <button class="btn btn-primary" onclick="askUpdateAI()">Get AI Explanation</button>
+    <div class="loading" id="update-loading"><div class="spinner"></div>Generating explanation...</div>
+    <div class="ai-response" id="update-ai"></div>
+  </div>
+</div>
+
+<!-- ===== CHAT PANEL ===== -->
+<div class="panel" id="panel-chat">
+  <div class="card">
+    <div class="card-title"><div class="icon">💬</div> Ask NaijaTax IQ Anything</div>
+    <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;">Ask any question about Nigerian tax — in plain English or even pidgin. No judgment.</p>
+
+    <div class="chat-messages" id="chat-messages">
+      <div class="msg ai">👋 Hello! I'm NaijaTax IQ. Ask me anything about Nigerian tax — PAYE, VAT, CIT, deadlines, penalties, exemptions, you name it. I'll break it down clearly for you.</div>
+    </div>
+
+    <div class="chat-input-row">
+      <input type="text" id="chat-input" placeholder="Type your question..." onkeydown="if(event.key==='Enter') sendChat()">
+      <button class="chat-send" onclick="sendChat()">➤</button>
+    </div>
+
+    <div style="margin-top:0.75rem;">
+      <span style="font-size:0.78rem;color:var(--muted);">Try asking:</span><br>
+      <span class="tag" style="cursor:pointer;margin-top:6px;" onclick="quickChat('When is the deadline to file annual tax returns?')">Filing deadlines</span>
+      <span class="tag" style="cursor:pointer;" onclick="quickChat('What happens if I don\'t pay my taxes?')">Penalties</span>
+      <span class="tag" style="cursor:pointer;" onclick="quickChat('Am I eligible for any tax exemptions?')">Exemptions</span>
+      <span class="tag gold" style="cursor:pointer;" onclick="quickChat('Explain PAYE to me like I\'m not an accountant')">PAYE simplified</span>
+    </div>
+  </div>
+</div>
+
+<!-- FUN FACT POPUP -->
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup">
+    <button class="popup-close" onclick="closePopup()">✕</button>
+    <div class="popup-emoji" id="popupEmoji">💡</div>
+    <h3 id="popupTitle">Tax Fun Fact</h3>
+    <p id="popupText"></p>
+  </div>
+</div>
+
+<footer>
+  NaijaTax IQ — Built for the Capstone Project | Powered by AI | For educational purposes only. Always consult a qualified tax professional for formal advice.
+</footer>
+
+<script>
+// ========== STATE ==========
+let currentMode = 'general';
+let quizMode = 'general';
+let quizData = [];
+let quizIndex = 0;
+let quizScore = 0;
+let chatHistory = [];
+
+const funFacts = [
+  { emoji: '💡', title: 'Did You Know?', text: 'Nigeria\'s FIRS collected ₦12.37 trillion in 2023 — the highest ever in the agency\'s history.' },
+  { emoji: '📊', title: 'Tax Fact', text: 'Only about 15 million Nigerians out of 200+ million pay income tax. That\'s why the government keeps expanding the tax net.' },
+  { emoji: '🏦', title: 'Finance Act Insight', text: 'The Finance Act has been amended five times in five years (2019–2023) — more than in the previous two decades combined.' },
+  { emoji: '🌍', title: 'Africa Perspective', text: 'Nigeria\'s VAT rate of 7.5% is one of the lowest in Africa. South Africa\'s is 15%, Kenya\'s is 16%.' },
+  { emoji: '⚖️', title: 'Legal Fact', text: 'The primary law governing personal income tax in Nigeria is PITA — the Personal Income Tax Act. It was last significantly amended in 2011.' },
+  { emoji: '🚀', title: 'Reform Alert', text: 'As of 2024, FIRS is pushing for a unified tax identification system — one TIN for all taxes at all levels.' },
+];
+
+// ========== MODE SWITCHING ==========
+function setMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  const desc = document.getElementById('modeDesc');
+  if (mode === 'general') {
+    desc.innerHTML = '📌 <strong>General Mode:</strong> Plain English explanations, simple calculators, and everyday tax guidance for every Nigerian.';
+    document.getElementById('payeNote').style.display = 'block';
+    document.getElementById('citNote').style.display = 'block';
+  } else {
+    desc.innerHTML = '🎓 <strong>Professional Mode:</strong> Technical depth, statutory references, and detailed analysis for accountants, tax practitioners, and finance professionals.';
+  }
+}
+
+// ========== TABS ==========
+function showTab(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  event.target.classList.add('active');
+
+  if (name === 'quiz' && quizData.length === 0) startQuiz();
+  showRandomPopup();
+}
+
+// ========== CALCULATOR ==========
+function switchCalculator() {
+  const type = document.getElementById('taxType').value;
+  document.getElementById('calc-paye').style.display = type === 'paye' ? 'block' : 'none';
+  document.getElementById('calc-pit').style.display = type === 'pit' ? 'block' : 'none';
+  document.getElementById('calc-vat').style.display = type === 'vat' ? 'block' : 'none';
+  document.getElementById('calc-cit').style.display = type === 'cit' ? 'block' : 'none';
+}
+
+async function calculatePIT() {
+  const income = parseFloat(document.getElementById('pit-income').value);
+  const expenses = parseFloat(document.getElementById('pit-expenses').value) || 0;
+  const pension = parseFloat(document.getElementById('pit-pension').value) || 0;
+  const rent = parseFloat(document.getElementById('pit-rent') ? document.getElementById('pit-rent').value : 0) || 0;
+  if (!income || income <= 0) return alert('Please enter your annual gross income.');
+
+  const netIncome = Math.max(0, income - expenses);
+  // NTA 2025: Rent relief replaces CRA
+  const rentRelief = Math.min(rent * 0.20, 500000);
+  const taxable = Math.max(0, netIncome - pension - rentRelief);
+
+  // NTA 2025 progressive bands
+  let tax = 0;
+  const bands = [
+    [800000,  0.00],
+    [2200000, 0.15],
+    [9000000, 0.18],
+    [12000000,0.21],
+    [26000000,0.23],
+    [Infinity, 0.25],
+  ];
+  let remaining = taxable;
+  for (const [band, rate] of bands) {
+    if (remaining <= 0) break;
+    const t = Math.min(remaining, band);
+    tax += t * rate;
+    remaining -= t;
+  }
+
+  const effectiveRate = income > 0 ? ((tax / income) * 100).toFixed(1) : 0;
+  const quarterly = tax / 4;
+  const netIncomeFinal = income - expenses - pension - tax;
+
+  const resultEl = document.getElementById('pit-result');
+  resultEl.innerHTML = `
+    <h4>💼 Self-Employed PIT Breakdown (NTA 2025)</h4>
+    <div class="result-row"><span class="label">Gross Income</span><span class="value">₦${fmt(income)}</span></div>
+    <div class="result-row"><span class="label">Less: Business Expenses</span><span class="value">− ₦${fmt(expenses)}</span></div>
+    <div class="result-row"><span class="label">Net Business Income</span><span class="value">₦${fmt(netIncome)}</span></div>
+    <div class="result-row"><span class="label">Less: Rent Relief (20%, max ₦500K)</span><span class="value">− ₦${fmt(rentRelief)}</span></div>
+    <div class="result-row"><span class="label">Less: Pension</span><span class="value">− ₦${fmt(pension)}</span></div>
+    <div class="result-row"><span class="label">Taxable Income</span><span class="value">₦${fmt(taxable)}</span></div>
+    <div class="result-row total"><span class="label">Annual PIT Payable</span><span class="value">₦${fmt(tax)}</span></div>
+    <div class="result-row"><span class="label">Quarterly Instalment</span><span class="value">₦${fmt(quarterly)}</span></div>
+    <div class="result-row"><span class="label">Effective Tax Rate</span><span class="value">${effectiveRate}%</span></div>
+    <div class="result-row"><span class="label">Estimated Take-Home (after tax)</span><span class="value">₦${fmt(netIncomeFinal)}</span></div>
+    <div style="margin-top:10px;font-size:0.8rem;color:var(--muted);">⚠️ File your annual return with your State Internal Revenue Service (SIRS) — not NRS/FIRS. Deadline: 31st March each year. NTA 2025 bands applied.</div>
+  `;
+  resultEl.classList.add('show');
+
+  await getAIExplanation('pit', `Gross income: ₦${fmt(income)}, Expenses: ₦${fmt(expenses)}, Rent relief: ₦${fmt(rentRelief)}, Taxable: ₦${fmt(taxable)}, Annual PIT: ₦${fmt(tax)}, Effective rate: ${effectiveRate}%. NTA 2025 bands. Mode: ${currentMode}`);
+}
+
+async function calculatePAYE() {
+  const gross = parseFloat(document.getElementById('paye-salary').value);
+  const pension = parseFloat(document.getElementById('paye-pension').value) || 0;
+  const rent = parseFloat(document.getElementById('paye-rent').value) || 0;
+  if (!gross || gross <= 0) return alert('Please enter your annual salary.');
+
+  // NTA 2025: Rent Relief replaces CRA
+  const rentRelief = Math.min(rent * 0.20, 500000);
+  const nhf = 0.025 * gross;
+  const totalRelief = rentRelief + pension + nhf;
+  const taxable = Math.max(0, gross - totalRelief);
+
+  // NTA 2025 PAYE bands (effective Jan 1, 2026)
+  let tax = 0;
+  const bands = [
+    [800000,  0.00],  // 0% on first ₦800,000
+    [2200000, 0.15],  // 15% on next ₦2.2M (₦800K–₦3M)
+    [9000000, 0.18],  // 18% on next ₦9M (₦3M–₦12M)
+    [12000000,0.21],  // 21% on next ₦12M (₦12M–₦24M)
+    [26000000,0.23],  // 23% on next ₦26M (₦24M–₦50M)
+    [Infinity, 0.25], // 25% above ₦50M
+  ];
+  let remaining = taxable;
+  for (const [band, rate] of bands) {
+    if (remaining <= 0) break;
+    const taxable_in_band = Math.min(remaining, band);
+    tax += taxable_in_band * rate;
+    remaining -= taxable_in_band;
+  }
+
+  const monthly = tax / 12;
+  const effectiveRate = gross > 0 ? ((tax / gross) * 100).toFixed(1) : 0;
+  const netAnnual = gross - tax - pension - nhf;
+
+  const resultEl = document.getElementById('paye-result');
+  resultEl.innerHTML = `
+    <h4>📊 Your PAYE Breakdown (NTA 2025)</h4>
+    <div class="result-row"><span class="label">Gross Annual Salary</span><span class="value">₦${fmt(gross)}</span></div>
+    <div class="result-row"><span class="label">Rent Relief (20% of rent, max ₦500K)</span><span class="value">− ₦${fmt(rentRelief)}</span></div>
+    <div class="result-row"><span class="label">Pension (employee contribution)</span><span class="value">− ₦${fmt(pension)}</span></div>
+    <div class="result-row"><span class="label">NHF (2.5%)</span><span class="value">− ₦${fmt(nhf)}</span></div>
+    <div class="result-row"><span class="label">Taxable Income</span><span class="value">₦${fmt(taxable)}</span></div>
+    <div class="result-row total"><span class="label">Annual Tax (PAYE)</span><span class="value">₦${fmt(tax)}</span></div>
+    <div class="result-row total"><span class="label">Monthly Tax Deduction</span><span class="value">₦${fmt(monthly)}</span></div>
+    <div class="result-row"><span class="label">Effective Tax Rate</span><span class="value">${effectiveRate}%</span></div>
+    <div class="result-row"><span class="label">Estimated Net Annual Pay</span><span class="value">₦${fmt(netAnnual)}</span></div>
+    <div style="margin-top:8px;font-size:0.8rem;color:var(--green-dark);">✅ Calculated using Nigeria Tax Act 2025 bands (effective Jan 1, 2026). CRA abolished — Rent Relief now applies.</div>
+  `;
+  resultEl.classList.add('show');
+
+  await getAIExplanation('paye', `Gross salary: ₦${fmt(gross)}, Rent relief: ₦${fmt(rentRelief)}, Taxable: ₦${fmt(taxable)}, Annual PAYE: ₦${fmt(tax)}, Monthly: ₦${fmt(monthly)}, Effective rate: ${effectiveRate}%, Net annual: ₦${fmt(netAnnual)}. NTA 2025 bands used. Mode: ${currentMode}`);
+}
+
+async function calculateVAT() {
+  const amount = parseFloat(document.getElementById('vat-amount').value);
+  const dir = document.getElementById('vat-direction').value;
+  if (!amount || amount <= 0) return alert('Please enter an amount.');
+
+  const rate = 0.075;
+  let vatAmount, total, base;
+  if (dir === 'add') {
+    base = amount;
+    vatAmount = amount * rate;
+    total = amount + vatAmount;
+  } else {
+    total = amount;
+    base = amount / 1.075;
+    vatAmount = total - base;
+  }
+
+  const resultEl = document.getElementById('vat-result');
+  resultEl.innerHTML = `
+    <h4>🛒 VAT Breakdown (7.5%)</h4>
+    <div class="result-row"><span class="label">Base Amount (excl. VAT)</span><span class="value">₦${fmt(base)}</span></div>
+    <div class="result-row total"><span class="label">VAT Amount (7.5%)</span><span class="value">₦${fmt(vatAmount)}</span></div>
+    <div class="result-row total"><span class="label">Total Amount (incl. VAT)</span><span class="value">₦${fmt(total)}</span></div>
+  `;
+  resultEl.classList.add('show');
+
+  await getAIExplanation('vat', `Base: ₦${fmt(base)}, VAT: ₦${fmt(vatAmount)}, Total: ₦${fmt(total)}. Direction: ${dir}. Mode: ${currentMode}`);
+}
+
+async function calculateCIT() {
+  const profit = parseFloat(document.getElementById('cit-profit').value);
+  const size = document.getElementById('cit-size').value;
+  if (!profit || profit <= 0) return alert('Please enter taxable profit.');
+
+  const citRate = size === 'small' ? 0 : 0.25; // NTA 2025: 0% small, 25% others
+  const devLevyRate = size === 'small' ? 0 : 0.04; // 4% Dev Levy for non-small companies
+  const cit = profit * citRate;
+  const devLevy = profit * devLevyRate;
+  const totalTax = cit + devLevy;
+  const afterTax = profit - totalTax;
+
+  const resultEl = document.getElementById('cit-result');
+  resultEl.innerHTML = `
+    <h4>🏢 CIT Breakdown (NTA 2025)</h4>
+    <div class="result-row"><span class="label">Taxable Profit (Assessable)</span><span class="value">₦${fmt(profit)}</span></div>
+    <div class="result-row"><span class="label">CIT Rate</span><span class="value">${(citRate * 100)}%</span></div>
+    <div class="result-row"><span class="label">CIT Payable</span><span class="value">₦${fmt(cit)}</span></div>
+    <div class="result-row"><span class="label">Development Levy (4%)</span><span class="value">₦${fmt(devLevy)}</span></div>
+    <div class="result-row total"><span class="label">Total Tax Liability</span><span class="value">₦${fmt(totalTax)}</span></div>
+    <div class="result-row"><span class="label">After-Tax Profit</span><span class="value">₦${fmt(afterTax)}</span></div>
+    ${size === 'small' ? '<div style="margin-top:8px;font-size:0.82rem;color:var(--green-dark);">✅ Your company qualifies for CIT and Development Levy exemption (NTA 2025 — turnover ≤ ₦100M). Note: professional services firms do not qualify.</div>' : '<div style="margin-top:8px;font-size:0.82rem;color:var(--muted);">Development Levy (4%) replaces Tertiary Education Tax, IT Levy, NASENI Levy and Police Trust Fund Levy under NTA 2025.</div>'}
+  `;
+  resultEl.classList.add('show');
+
+  await getAIExplanation('cit', `Profit: ₦${fmt(profit)}, Size: ${size}, CIT: ₦${fmt(cit)} (${citRate*100}%), Dev Levy: ₦${fmt(devLevy)}, Total tax: ₦${fmt(totalTax)}. NTA 2025. Mode: ${currentMode}`);
+}
+
+async function getAIExplanation(type, data) {
+  const aiEl = document.getElementById(`${type}-ai`);
+  const loadEl = document.getElementById(`${type}-loading`);
+  aiEl.classList.remove('show');
+  loadEl.classList.add('show');
+
+  const isPro = currentMode === 'pro';
+  const prompts = {
+    paye: `You are NaijaTax IQ, a friendly Nigerian tax assistant. A user just calculated their PAYE. Data: ${data}. ${isPro ? 'Give a professional explanation including statutory basis (PITA, Finance Act), effective rate, and planning tips for tax professionals.' : 'Explain what this means in simple, everyday language a Nigerian worker would understand. Use relatable analogies. Keep it under 120 words.'}`,
+    pit: `You are NaijaTax IQ. A self-employed Nigerian or freelancer just calculated their Personal Income Tax. Data: ${data}. ${isPro ? 'Provide a professional explanation covering PITA provisions for self-employed individuals, direct assessment process, quarterly instalment obligations, and record-keeping requirements.' : 'Explain what this means in simple language for a freelancer or small business owner in Nigeria. Remind them they must file with their State IRS (not FIRS), mention the March 31 deadline, and give one practical money-saving tip. Under 130 words.'}`,
+    vat: `You are NaijaTax IQ. A user just calculated VAT. Data: ${data}. ${isPro ? 'Provide a professional breakdown referencing VATA and Finance Act 2019, including compliance obligations and invoice requirements.' : 'Explain what VAT means for this transaction in plain, friendly language. Tell them who ultimately bears the cost and why. Under 100 words.'}`,
+    cit: `You are NaijaTax IQ. A user calculated CIT. Data: ${data}. ${isPro ? 'Provide technical analysis including CITA provisions, minimum tax considerations, and tax planning opportunities.' : 'Explain what Companies Income Tax means for this business in simple language. Tell them when to pay and what to do next. Under 100 words.'}`
+  };
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [{ role: 'user', content: prompts[type] }]
+      })
+    });
+    const d = await res.json();
+    const text = d.text || 'Could not generate explanation.';
+    aiEl.innerHTML = `<div class="ai-label">NaijaTax IQ Explains</div>${text}`;
+    aiEl.classList.add('show');
+  } catch (e) {
+    aiEl.innerHTML = `<div class="ai-label">NaijaTax IQ</div>Unable to load AI explanation right now.`;
+    aiEl.classList.add('show');
+  }
+  loadEl.classList.remove('show');
+}
+
+// ========== JARGON BUSTER ==========
+function quickJargon(term) {
+  document.getElementById('jargon-input').value = term;
+  explainJargon();
+}
+
+async function explainJargon() {
+  const term = document.getElementById('jargon-input').value.trim();
+  if (!term) return alert('Please enter a tax term.');
+  const isPro = currentMode === 'pro';
+  const load = document.getElementById('jargon-loading');
+  const result = document.getElementById('jargon-result');
+  const text = document.getElementById('jargon-text');
+  result.classList.remove('show');
+  load.classList.add('show');
+
+  const prompt = `You are NaijaTax IQ, a Nigerian tax education tool. Explain the tax term: "${term}" in the context of Nigerian tax law. ${isPro ? 'Give a professional definition including relevant statutes (CITA, PITA, VATA, FIRS Act, Finance Acts), case law if applicable, and practical implications for tax practitioners. Be thorough.' : 'Explain this in very simple, plain English that any Nigerian can understand — no jargon. Use a simple analogy if helpful. Keep it under 150 words. End with one practical tip.'} Format clearly.`;
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const d = await res.json();
+    text.textContent = d.text || 'Could not explain this term.';
+    result.classList.add('show');
+  } catch (e) {
+    text.textContent = 'Unable to load explanation. Please try again.';
+    result.classList.add('show');
+  }
+  load.classList.remove('show');
+}
+
+// ========== QUIZ ==========
+const generalQuizPool = [
+  { q: 'What is the current VAT rate in Nigeria?', opts: ['5%', '7.5%', '10%', '15%'], ans: 1, exp: 'The VAT rate was increased from 5% to 7.5% by the Finance Act 2019, which took effect from February 2020.' },
+  { q: 'Which tax authority collects federal taxes in Nigeria?', opts: ['SIRS', 'LIRS', 'FIRS', 'CBN'], ans: 2, exp: 'FIRS — the Federal Inland Revenue Service — is responsible for collecting taxes for the federal government, including CIT, VAT, and withholding tax.' },
+  { q: 'PAYE stands for:', opts: ['Pay As You Earn', 'Pay After Year End', 'Pre-Annual Year Earnings', 'Pay and Year Expenses'], ans: 0, exp: 'PAYE means Pay As You Earn. Your employer deducts tax from your salary every month before you even receive it.' },
+  { q: 'What does TIN stand for?', opts: ['Tax Income Number', 'Tax Identification Number', 'Taxpayer Index Number', 'Tax Integration Note'], ans: 1, exp: 'TIN is a Tax Identification Number — a unique number assigned to every taxpayer in Nigeria. You need it to file returns or receive government payments.' },
+  { q: 'Under Finance Act 2020, companies with annual turnover below ₦25 million pay CIT at:', opts: ['30%', '20%', '10%', '0%'], ans: 3, exp: 'Small companies with turnover below ₦25 million are completely exempt from Companies Income Tax under the Finance Act 2020.' },
+  { q: 'Which of these is NOT a type of direct tax in Nigeria?', opts: ['PAYE', 'Capital Gains Tax', 'VAT', 'Companies Income Tax'], ans: 2, exp: 'VAT is an indirect tax — it\'s collected by the seller and passed on to FIRS. The consumer ultimately bears the cost. PAYE, CGT, and CIT are direct taxes.' },
+];
+
+const proQuizPool = [
+  { q: 'Under CITA, what is the minimum tax payable when a company has no taxable profit?', opts: ['0.5% of turnover', '1% of gross profit', '2% of net assets', 'Nil'], ans: 0, exp: 'Section 33 of CITA provides for minimum tax of 0.5% of gross turnover where no tax is payable or the tax is lower than this amount. Finance Act 2021 revised the provisions.' },
+  { q: 'Which Finance Act introduced the Digital Services Tax provision in Nigeria?', opts: ['Finance Act 2019', 'Finance Act 2020', 'Finance Act 2021', 'Finance Act 2023'], ans: 0, exp: 'The Finance Act 2019 amended the CITA and VATA to bring non-resident companies providing digital services to Nigerian consumers into the tax net.' },
+  { q: 'Transfer Pricing regulations in Nigeria are governed primarily by:', opts: ['FIRS TP Regulations 2012', 'CITA Section 22', 'Finance Act 2020', 'TADAT Framework'], ans: 0, exp: 'The Income Tax (Transfer Pricing) Regulations 2012 (amended 2018) is the primary TP framework in Nigeria, requiring arm\'s length pricing for related-party transactions.' },
+  { q: 'What is the withholding tax rate on dividends paid to Nigerian resident individuals?', opts: ['5%', '7.5%', '10%', '15%'], ans: 2, exp: 'Dividends paid to Nigerian resident individuals attract a WHT rate of 10% which is a final tax. This is deducted at source by the paying company.' },
+  { q: 'The Tertiary Education Tax (TET) is charged at what rate on assessable profits?', opts: ['1%', '2.5%', '3%', '5%'], ans: 1, exp: 'TET is charged at 2.5% of assessable profits of companies registered in Nigeria. It was increased from 2% by the Finance Act 2021.' },
+  { q: 'Under PITA, the Consolidated Relief Allowance is:', opts: ['₦200,000 only', '20% of gross income only', 'Higher of ₦200,000 or 20% of gross income + 1% of gross', 'Lower of ₦200,000 or 1% of gross income'], ans: 2, exp: 'The CRA is the higher of ₦200,000 or 1% of gross income, PLUS 20% of gross income. This is the most significant deduction available to employees.' },
+];
+
+function setQuizMode(mode) { quizMode = mode; }
+
+function startQuiz() {
+  const pool = quizMode === 'pro' ? proQuizPool : generalQuizPool;
+  quizData = [...pool].sort(() => Math.random() - 0.5).slice(0, 5);
+  quizIndex = 0;
+  quizScore = 0;
+  document.getElementById('quiz-score').classList.remove('show');
+  document.getElementById('quiz-mode-badge').innerHTML = quizMode === 'pro' ? '<span class="pro-badge">PRO</span>' : '';
+  renderQuiz();
+}
+
+function renderQuiz() {
+  const q = quizData[quizIndex];
+  document.getElementById('quiz-progress').textContent = `Question ${quizIndex + 1} of ${quizData.length}`;
+  document.getElementById('quiz-q').textContent = q.q;
+  document.getElementById('quiz-feedback').classList.remove('show', 'correct', 'wrong');
+  document.getElementById('quiz-next-btn').style.display = 'none';
+
+  const optsEl = document.getElementById('quiz-opts');
+  optsEl.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = opt;
+    btn.onclick = () => answerQuiz(i, btn);
+    optsEl.appendChild(btn);
+  });
+}
+
+function answerQuiz(selected, btn) {
+  const q = quizData[quizIndex];
+  const allBtns = document.querySelectorAll('.quiz-opt');
+  allBtns.forEach(b => b.onclick = null);
+
+  const correct = selected === q.ans;
+  if (correct) quizScore++;
+
+  allBtns.forEach((b, i) => {
+    if (i === q.ans) b.classList.add('correct');
+    else if (i === selected && !correct) b.classList.add('wrong');
+  });
+
+  const fb = document.getElementById('quiz-feedback');
+  fb.textContent = (correct ? '✅ Correct! ' : '❌ Not quite. ') + q.exp;
+  fb.className = `quiz-feedback show ${correct ? 'correct' : 'wrong'}`;
+  document.getElementById('quiz-next-btn').style.display = 'block';
+}
+
+function nextQuiz() {
+  quizIndex++;
+  if (quizIndex >= quizData.length) {
+    document.getElementById('quiz-opts').innerHTML = '';
+    document.getElementById('quiz-q').textContent = '';
+    document.getElementById('quiz-progress').textContent = '';
+    document.getElementById('quiz-feedback').classList.remove('show');
+    document.getElementById('quiz-next-btn').style.display = 'none';
+    const scoreEl = document.getElementById('quiz-score');
+    document.getElementById('score-display').textContent = `${quizScore}/${quizData.length}`;
+    const msgs = ['Keep studying! 📚', 'Not bad — keep going! 💪', 'Good effort! 👍', 'Very solid! 🌟', 'Excellent! You know your tax! 🏆'];
+    document.getElementById('score-msg').textContent = msgs[Math.min(quizScore, 4)];
+    scoreEl.classList.add('show');
+  } else {
+    renderQuiz();
+  }
+}
+
+// ========== UPDATES AI ==========
+async function askUpdateAI() {
+  const q = document.getElementById('update-q').value.trim();
+  if (!q) return alert('Please type a question.');
+  const load = document.getElementById('update-loading');
+  const aiEl = document.getElementById('update-ai');
+  aiEl.classList.remove('show');
+  load.classList.add('show');
+
+  const isPro = currentMode === 'pro';
+  const prompt = `You are NaijaTax IQ. A user is asking about a Nigerian tax update or development: "${q}". ${isPro ? 'Provide a detailed professional response referencing relevant legislation, regulations, and practical compliance implications.' : 'Answer in plain, friendly language that any Nigerian can understand. Be practical and specific. Under 150 words.'}`;
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const d = await res.json();
+    const text = d.text || 'Could not generate response.';
+    aiEl.innerHTML = `<div class="ai-label">NaijaTax IQ</div>${text}`;
+    aiEl.classList.add('show');
+  } catch (e) {
+    aiEl.innerHTML = `<div class="ai-label">NaijaTax IQ</div>Unable to load response. Please try again.`;
+    aiEl.classList.add('show');
+  }
+  load.classList.remove('show');
+}
+
+// ========== CHAT ==========
+function quickChat(msg) {
+  document.getElementById('chat-input').value = msg;
+  sendChat();
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  const messagesEl = document.getElementById('chat-messages');
+
+  const userMsg = document.createElement('div');
+  userMsg.className = 'msg user';
+  userMsg.textContent = msg;
+  messagesEl.appendChild(userMsg);
+
+  const typing = document.createElement('div');
+  typing.className = 'msg typing';
+  typing.innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
+  messagesEl.appendChild(typing);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+
+  chatHistory.push({ role: 'user', content: msg });
+
+  const isPro = currentMode === 'pro';
+  const system = `You are NaijaTax IQ, a friendly and knowledgeable Nigerian tax assistant. You answer questions about Nigerian taxation — PAYE, VAT, CIT, withholding tax, capital gains tax, transfer pricing, FIRS, Finance Acts, and related topics. ${isPro ? 'The user is a tax professional or accountant. Be technical, reference relevant legislation (CITA, PITA, VATA, Finance Acts), and provide thorough analysis.' : 'The user is a general Nigerian. Speak in plain, clear English. Use relatable everyday examples. Avoid jargon. Be warm and encouraging.'} Keep responses concise and helpful. If asked something outside Nigerian tax, politely redirect.`;
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system,
+        messages: chatHistory
+      })
+    });
+    const d = await res.json();
+    const text = d.text || 'Sorry, I couldn\'t generate a response.';
+    chatHistory.push({ role: 'assistant', content: text });
+
+    typing.remove();
+    const aiMsg = document.createElement('div');
+    aiMsg.className = 'msg ai';
+    aiMsg.textContent = text;
+    messagesEl.appendChild(aiMsg);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  } catch (e) {
+    typing.remove();
+    const errMsg = document.createElement('div');
+    errMsg.className = 'msg ai';
+    errMsg.textContent = 'Sorry, I\'m having trouble connecting right now. Please try again.';
+    messagesEl.appendChild(errMsg);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+}
+
+// ========== POPUP ==========
+let popupTimer;
+function showRandomPopup() {
+  clearTimeout(popupTimer);
+  popupTimer = setTimeout(() => {
+    const fact = funFacts[Math.floor(Math.random() * funFacts.length)];
+    document.getElementById('popupEmoji').textContent = fact.emoji;
+    document.getElementById('popupTitle').textContent = fact.title;
+    document.getElementById('popupText').textContent = fact.text;
+    document.getElementById('popupOverlay').classList.add('show');
+  }, 8000);
+}
+function closePopup() {
+  document.getElementById('popupOverlay').classList.remove('show');
+}
+
+// ========== UTILS ==========
+function fmt(n) {
+  return Math.round(n).toLocaleString('en-NG');
+}
+
+// Init
+startQuiz();
+setTimeout(showRandomPopup, 12000);
+</script>
+</body>
+</html>
