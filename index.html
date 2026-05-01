@@ -883,9 +883,9 @@
     <label>Company Size</label>
     <select id="cit-size">
       <option value="small">Small (Turnover ≤ ₦100M AND fixed assets ≤ ₦250M) — 0% CIT</option>
-      <option value="large">Other Companies (above threshold or professional services) — 25% CIT</option>
+      <option value="large">Other Companies (above threshold or professional services) — 30% CIT</option>
     </select>
-    <div class="small-note" id="citNote">NTA 2025: Small company threshold raised from ₦25M to ₦100M turnover. CIT rate for other companies reduced to 25%. A new 4% Development Levy also applies to non-small companies (replaces TET, IT Levy, NASENI, Police Fund levies). Note: professional services firms do NOT qualify for the small company exemption.</div>
+    <div class="small-note" id="citNote">NTA 2025: Small company threshold raised from ₦25M to ₦100M turnover. CIT rate for other companies remains at 30%. A new 4% Development Levy also applies to non-small companies (replaces TET, IT Levy, NASENI, Police Fund levies). Note: professional services firms do NOT qualify for the small company exemption.</div>
     <button class="btn btn-primary" onclick="calculateCIT()">Calculate CIT</button>
     <div class="result-box" id="cit-result"></div>
     <div class="ai-response" id="cit-ai"></div>
@@ -998,7 +998,7 @@
     <div class="update-item">
       <div class="update-date">Nigeria Tax Act 2025 — Effective Jan 1, 2026</div>
       <div class="update-title">CIT Rate Reduced to 25% for Non-Small Companies</div>
-      <div class="update-body">The previous two-tier structure (20% medium, 30% large) is replaced by a single 25% rate for all non-small companies. This applies from the 2026 year of assessment. CGT for companies is now also taxed at the CIT rate (30% → 25%), while CGT for individuals follows the same progressive PIT bands.</div>
+      <div class="update-body">The previous two-tier structure (20% medium, 30% large) is replaced by a single 30% rate for all non-small companies. CGT for companies is also taxed at the CIT rate, while CGT for individuals follows the same progressive PIT bands.</div>
     </div>
 
     <div class="divider"></div>
@@ -1244,7 +1244,7 @@ async function calculateCIT() {
   const size = document.getElementById('cit-size').value;
   if (!profit || profit <= 0) return alert('Please enter taxable profit.');
 
-  const citRate = size === 'small' ? 0 : 0.25; // NTA 2025: 0% small, 25% others
+  const citRate = size === 'small' ? 0 : 0.30; // 0% small, 30% others
   const devLevyRate = size === 'small' ? 0 : 0.04; // 4% Dev Levy for non-small companies
   const cit = profit * citRate;
   const devLevy = profit * devLevyRate;
@@ -1348,7 +1348,7 @@ const generalQuizPool = [
 
 const proQuizPool = [
   { q: 'Under CITA, what is the minimum tax payable when a company has no taxable profit?', opts: ['0.5% of turnover', '1% of gross profit', '2% of net assets', 'Nil'], ans: 0, exp: 'Section 33 of CITA provides for minimum tax of 0.5% of gross turnover where no tax is payable or the tax is lower than this amount. Finance Act 2021 revised the provisions.' },
-  { q: 'Which Finance Act introduced the Digital Services Tax provision in Nigeria?', opts: ['Finance Act 2019', 'Finance Act 2020', 'Finance Act 2021', 'Finance Act 2023'], ans: 0, exp: 'The Finance Act 2019 amended the CITA and VATA to bring non-resident companies providing digital services to Nigerian consumers into the tax net.' },
+  { q: 'What is the current CIT rate for non-small companies in Nigeria?', opts: ['20%', '25%', '30%', '32%'], ans: 2, exp: 'The Companies Income Tax rate for non-small companies in Nigeria is 30%. The NTA 2025 raised the small company exemption threshold to ₦100M turnover but did not reduce the standard CIT rate.' },
   { q: 'Transfer Pricing regulations in Nigeria are governed primarily by:', opts: ['FIRS TP Regulations 2012', 'CITA Section 22', 'Finance Act 2020', 'TADAT Framework'], ans: 0, exp: 'The Income Tax (Transfer Pricing) Regulations 2012 (amended 2018) is the primary TP framework in Nigeria, requiring arm\'s length pricing for related-party transactions.' },
   { q: 'What is the withholding tax rate on dividends paid to Nigerian resident individuals?', opts: ['5%', '7.5%', '10%', '15%'], ans: 2, exp: 'Dividends paid to Nigerian resident individuals attract a WHT rate of 10% which is a final tax. This is deducted at source by the paying company.' },
   { q: 'The Tertiary Education Tax (TET) is charged at what rate on assessable profits?', opts: ['1%', '2.5%', '3%', '5%'], ans: 1, exp: 'TET is charged at 2.5% of assessable profits of companies registered in Nigeria. It was increased from 2% by the Finance Act 2021.' },
