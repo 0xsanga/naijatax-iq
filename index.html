@@ -709,7 +709,7 @@
     <div class="fun-fact-icon">💡</div>
     <div class="fun-fact-body">
       <div class="fun-fact-label">Fun Fact</div>
-      <div class="fun-fact-text" id="funFactText">Nigeria's tax-to-GDP ratio is around 10% — one of the lowest in Africa. The global average is about 15%. FIRS has been working hard to change this story.</div>
+      <div class="fun-fact-text" id="funFactText">Nigeria's tax-to-GDP ratio is around 10% — one of the lowest in Africa. The global average is about 15%. NRS has been working hard to change this story.</div>
     </div>
   </div>
 
@@ -864,7 +864,7 @@
 <div class="panel" id="panel-updates">
   <div class="card">
     <div class="card-title"><div class="icon">📰</div> Recent Tax Updates & Trends</div>
-    <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1.2rem;">Key developments in Nigerian tax law and FIRS policy you should know about.</p>
+    <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1.2rem;">Key developments in Nigerian tax law and NRS policy you should know about.</p>
 
     <div class="update-item">
       <div class="update-date">Nigeria Tax Act 2025 — Effective Jan 1, 2026</div>
@@ -887,7 +887,7 @@
     <div class="update-item">
       <div class="update-date">Nigeria Tax Act 2025 — Effective Jan 1, 2026</div>
       <div class="update-title">FIRS Renamed: Now Nigeria Revenue Service (NRS)</div>
-      <div class="update-body">The Federal Inland Revenue Service (FIRS) has been restructured and renamed the Nigeria Revenue Service (NRS). TIN is now mandatory for all financial transactions, with an individual's NIN serving as their Tax ID. A new Tax Ombuds office handles taxpayer complaints independently.</div>
+      <div class="update-body">The Nigeria Revenue Service (NRS) has been restructured and renamed the Nigeria Revenue Service (NRS). TIN is now mandatory for all financial transactions, with an individual's NIN serving as their Tax ID. A new Tax Ombuds office handles taxpayer complaints independently.</div>
     </div>
 
     <div class="update-item">
@@ -960,12 +960,12 @@ let quizScore = 0;
 let chatHistory = [];
 
 const funFacts = [
-  { emoji: '💡', title: 'Did You Know?', text: 'Nigeria\'s FIRS collected ₦12.37 trillion in 2023 — the highest ever in the agency\'s history.' },
+  { emoji: '💡', title: 'Did You Know?', text: 'Nigeria\'s NRS collected ₦12.37 trillion in 2023 — the highest ever in the agency\'s history.' },
   { emoji: '📊', title: 'Tax Fact', text: 'Only about 15 million Nigerians out of 200+ million pay income tax. That\'s why the government keeps expanding the tax net.' },
   { emoji: '🏦', title: 'Finance Act Insight', text: 'The Finance Act has been amended five times in five years (2019–2023) — more than in the previous two decades combined.' },
   { emoji: '🌍', title: 'Africa Perspective', text: 'Nigeria\'s VAT rate of 7.5% is one of the lowest in Africa. South Africa\'s is 15%, Kenya\'s is 16%.' },
   { emoji: '⚖️', title: 'Legal Fact', text: 'The primary law governing personal income tax in Nigeria is PITA — the Personal Income Tax Act. It was last significantly amended in 2011.' },
-  { emoji: '🚀', title: 'Reform Alert', text: 'As of 2024, FIRS is pushing for a unified tax identification system — one TIN for all taxes at all levels.' },
+  { emoji: '🚀', title: 'Reform Alert', text: 'As of 2024, NRS is pushing for a unified tax identification system — one TIN for all taxes at all levels.' },
 ];
 
 // ========== MODE SWITCHING ==========
@@ -1056,7 +1056,7 @@ async function calculatePIT() {
     <div class="result-row"><span class="label">Quarterly Instalment</span><span class="value">₦${fmt(quarterly)}</span></div>
     <div class="result-row"><span class="label">Effective Tax Rate</span><span class="value">${effectiveRate}%</span></div>
     <div class="result-row"><span class="label">Estimated Take-Home (after tax)</span><span class="value">₦${fmt(netIncomeFinal)}</span></div>
-    <div style="margin-top:10px;font-size:0.8rem;color:var(--muted);">⚠️ File your annual return with your State Internal Revenue Service (SIRS) — not NRS/FIRS. Deadline: 31st March each year. NTA 2025 bands applied.</div>
+    <div style="margin-top:10px;font-size:0.8rem;color:var(--muted);">⚠️ File your annual return with your State Internal Revenue Service (SIRS) — not NRS/NRS. Deadline: 31st March each year. NTA 2025 bands applied.</div>
   `;
   resultEl.classList.add('show');
 
@@ -1182,7 +1182,7 @@ async function getAIExplanation(type, data) {
   const isPro = currentMode === 'pro';
   const prompts = {
     paye: `You are NaijaTax IQ, a friendly Nigerian tax assistant. A user just calculated their PAYE. Data: ${data}. ${isPro ? 'Give a professional explanation including statutory basis (PITA, Finance Act), effective rate, and planning tips for tax professionals.' : 'Explain what this means in simple, everyday language a Nigerian worker would understand. Use relatable analogies. Keep it under 120 words.'}`,
-    pit: `You are NaijaTax IQ. A self-employed Nigerian or freelancer just calculated their Personal Income Tax. Data: ${data}. ${isPro ? 'Provide a professional explanation covering PITA provisions for self-employed individuals, direct assessment process, quarterly instalment obligations, and record-keeping requirements.' : 'Explain what this means in simple language for a freelancer or small business owner in Nigeria. Remind them they must file with their State IRS (not FIRS), mention the March 31 deadline, and give one practical money-saving tip. Under 130 words.'}`,
+    pit: `You are NaijaTax IQ. A self-employed Nigerian or freelancer just calculated their Personal Income Tax. Data: ${data}. ${isPro ? 'Provide a professional explanation covering PITA provisions for self-employed individuals, direct assessment process, quarterly instalment obligations, and record-keeping requirements.' : 'Explain what this means in simple language for a freelancer or small business owner in Nigeria. Remind them they must file with their State IRS (not NRS), mention the March 31 deadline, and give one practical money-saving tip. Under 130 words.'}`,
     vat: `You are NaijaTax IQ. A user just calculated VAT. Data: ${data}. ${isPro ? 'Provide a professional breakdown referencing VATA and Finance Act 2019, including compliance obligations and invoice requirements.' : 'Explain what VAT means for this transaction in plain, friendly language. Tell them who ultimately bears the cost and why. Under 100 words.'}`,
     cit: `You are NaijaTax IQ. A user calculated CIT. Data: ${data}. ${isPro ? 'Provide technical analysis including CITA provisions, minimum tax considerations, and tax planning opportunities.' : 'Explain what Companies Income Tax means for this business in simple language. Tell them when to pay and what to do next. Under 100 words.'}`
   };
@@ -1222,7 +1222,7 @@ async function explainJargon() {
   result.classList.remove('show');
   load.classList.add('show');
 
-  const prompt = `You are NaijaTax IQ, a Nigerian tax education tool. Explain the tax term: "${term}" in the context of Nigerian tax law. ${isPro ? 'Give a professional definition including relevant statutes (CITA, PITA, VATA, FIRS Act, Finance Acts), case law if applicable, and practical implications for tax practitioners. Be thorough.' : 'Explain this in very simple, plain English that any Nigerian can understand — no jargon. Use a simple analogy if helpful. Keep it under 150 words. End with one practical tip.'} Format clearly.`;
+  const prompt = `You are NaijaTax IQ, a Nigerian tax education tool. Explain the tax term: "${term}" in the context of Nigerian tax law. ${isPro ? 'Give a professional definition including relevant statutes (CITA, PITA, VATA, NRS Act, Finance Acts), case law if applicable, and practical implications for tax practitioners. Be thorough.' : 'Explain this in very simple, plain English that any Nigerian can understand — no jargon. Use a simple analogy if helpful. Keep it under 150 words. End with one practical tip.'} Format clearly.`;
 
   try {
     const res = await fetch('/api/chat', {
@@ -1245,17 +1245,17 @@ async function explainJargon() {
 // ========== QUIZ ==========
 const generalQuizPool = [
   { q: 'What is the current VAT rate in Nigeria?', opts: ['5%', '7.5%', '10%', '15%'], ans: 1, exp: 'The VAT rate was increased from 5% to 7.5% by the Finance Act 2019, which took effect from February 2020.' },
-  { q: 'Which tax authority collects federal taxes in Nigeria?', opts: ['SIRS', 'LIRS', 'FIRS', 'CBN'], ans: 2, exp: 'FIRS — the Federal Inland Revenue Service — is responsible for collecting taxes for the federal government, including CIT, VAT, and withholding tax.' },
+  { q: 'Which tax authority collects federal taxes in Nigeria?', opts: ['SIRS', 'LIRS', 'NRS', 'CBN'], ans: 2, exp: 'NRS — the Nigeria Revenue Service — is responsible for collecting taxes for the federal government, including CIT, VAT, and withholding tax.' },
   { q: 'PAYE stands for:', opts: ['Pay As You Earn', 'Pay After Year End', 'Pre-Annual Year Earnings', 'Pay and Year Expenses'], ans: 0, exp: 'PAYE means Pay As You Earn. Your employer deducts tax from your salary every month before you even receive it.' },
   { q: 'What does TIN stand for?', opts: ['Tax Income Number', 'Tax Identification Number', 'Taxpayer Index Number', 'Tax Integration Note'], ans: 1, exp: 'TIN is a Tax Identification Number — a unique number assigned to every taxpayer in Nigeria. You need it to file returns or receive government payments.' },
   { q: 'Under Finance Act 2020, companies with annual turnover below ₦25 million pay CIT at:', opts: ['30%', '20%', '10%', '0%'], ans: 3, exp: 'Small companies with turnover below ₦25 million are completely exempt from Companies Income Tax under the Finance Act 2020.' },
-  { q: 'Which of these is NOT a type of direct tax in Nigeria?', opts: ['PAYE', 'Capital Gains Tax', 'VAT', 'Companies Income Tax'], ans: 2, exp: 'VAT is an indirect tax — it\'s collected by the seller and passed on to FIRS. The consumer ultimately bears the cost. PAYE, CGT, and CIT are direct taxes.' },
+  { q: 'Which of these is NOT a type of direct tax in Nigeria?', opts: ['PAYE', 'Capital Gains Tax', 'VAT', 'Companies Income Tax'], ans: 2, exp: 'VAT is an indirect tax — it\'s collected by the seller and passed on to NRS. The consumer ultimately bears the cost. PAYE, CGT, and CIT are direct taxes.' },
 ];
 
 const proQuizPool = [
   { q: 'Under CITA, what is the minimum tax payable when a company has no taxable profit?', opts: ['0.5% of turnover', '1% of gross profit', '2% of net assets', 'Nil'], ans: 0, exp: 'Section 33 of CITA provides for minimum tax of 0.5% of gross turnover where no tax is payable or the tax is lower than this amount. Finance Act 2021 revised the provisions.' },
   { q: 'What is the current CIT rate for non-small companies in Nigeria?', opts: ['20%', '25%', '30%', '32%'], ans: 2, exp: 'The Companies Income Tax rate for non-small companies in Nigeria is 30%. The NTA 2025 raised the small company exemption threshold to ₦100M turnover but did not reduce the standard CIT rate.' },
-  { q: 'Transfer Pricing regulations in Nigeria are governed primarily by:', opts: ['FIRS TP Regulations 2012', 'CITA Section 22', 'Finance Act 2020', 'TADAT Framework'], ans: 0, exp: 'The Income Tax (Transfer Pricing) Regulations 2012 (amended 2018) is the primary TP framework in Nigeria, requiring arm\'s length pricing for related-party transactions.' },
+  { q: 'Transfer Pricing regulations in Nigeria are governed primarily by:', opts: ['NRS TP Regulations 2012', 'CITA Section 22', 'Finance Act 2020', 'TADAT Framework'], ans: 0, exp: 'The Income Tax (Transfer Pricing) Regulations 2012 (amended 2018) is the primary TP framework in Nigeria, requiring arm\'s length pricing for related-party transactions.' },
   { q: 'What is the withholding tax rate on dividends paid to Nigerian resident individuals?', opts: ['5%', '7.5%', '10%', '15%'], ans: 2, exp: 'Dividends paid to Nigerian resident individuals attract a WHT rate of 10% which is a final tax. This is deducted at source by the paying company.' },
   { q: 'The Tertiary Education Tax (TET) is charged at what rate on assessable profits?', opts: ['1%', '2.5%', '3%', '5%'], ans: 1, exp: 'TET is charged at 2.5% of assessable profits of companies registered in Nigeria. It was increased from 2% by the Finance Act 2021.' },
 ];
@@ -1386,7 +1386,7 @@ async function sendChat() {
   chatHistory.push({ role: 'user', content: msg });
 
   const isPro = currentMode === 'pro';
-  const system = `You are NaijaTax IQ, a friendly and knowledgeable Nigerian tax assistant. You answer questions about Nigerian taxation — PAYE, VAT, CIT, withholding tax, capital gains tax, transfer pricing, FIRS, Finance Acts, and related topics. ${isPro ? 'The user is a tax professional or accountant. Be technical, reference relevant legislation (CITA, PITA, VATA, Finance Acts), and provide thorough analysis.' : 'The user is a general Nigerian. Speak in plain, clear English. Use relatable everyday examples. Avoid jargon. Be warm and encouraging.'} Keep responses concise and helpful. If asked something outside Nigerian tax, politely redirect.`;
+  const system = `You are NaijaTax IQ, a friendly and knowledgeable Nigerian tax assistant. You answer questions about Nigerian taxation — PAYE, VAT, CIT, withholding tax, capital gains tax, transfer pricing, NRS, Finance Acts, and related topics. ${isPro ? 'The user is a tax professional or accountant. Be technical, reference relevant legislation (CITA, PITA, VATA, Finance Acts), and provide thorough analysis.' : 'The user is a general Nigerian. Speak in plain, clear English. Use relatable everyday examples. Avoid jargon. Be warm and encouraging.'} Keep responses concise and helpful. If asked something outside Nigerian tax, politely redirect.`;
 
   try {
     const res = await fetch('/api/chat', {
