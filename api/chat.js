@@ -1,5 +1,7 @@
 export const config = { runtime: 'edge' };
 
+const MAX_BODY_BYTES = 32_768; // 32 KB
+
 export default async function handler(req) {
   if (req.method === 'OPTIONS') {
     return new Response(null, {
@@ -15,10 +17,18 @@ export default async function handler(req) {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
   }
 
+  const contentLength = parseInt(req.headers.get('content-length') || '0', 10);
+  if (contentLength > MAX_BODY_BYTES) {
+    return new Response(JSON.stringify({ error: 'Request body too large' }), {
+      status: 413,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
-    return new Response(JSON.stringify({ text: 'DEBUG: GROQ_API_KEY is not set' }), {
-      status: 200,
+    return new Response(JSON.stringify({ error: 'Service configuration error. Please try again later.' }), {
+      status: 503,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
   }
@@ -27,8 +37,8 @@ export default async function handler(req) {
   const { messages, system } = body;
 
   if (!messages || !Array.isArray(messages)) {
-    return new Response(JSON.stringify({ text: 'DEBUG: invalid messages array' }), {
-      status: 200,
+    return new Response(JSON.stringify({ error: 'Invalid request format.' }), {
+      status: 400,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
   }
@@ -60,13 +70,13 @@ export default async function handler(req) {
     const data = await groqRes.json();
 
     if (!groqRes.ok) {
-      return new Response(JSON.stringify({ text: 'DEBUG GROQ ERROR: ' + JSON.stringify(data) }), {
-        status: 200,
+      return new Response(JSON.stringify({ error: 'The assistant is currently unavailable. Please try again later.' }), {
+        status: 502,
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
       });
     }
 
-    const text = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || 'DEBUG: empty response';
+    const text = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || 'No response received. Please try again.';
 
     return new Response(JSON.stringify({ text: text }), {
       status: 200,
@@ -74,8 +84,8 @@ export default async function handler(req) {
     });
 
   } catch (err) {
-    return new Response(JSON.stringify({ text: 'DEBUG EXCEPTION: ' + err.message }), {
-      status: 200,
+    return new Response(JSON.stringify({ error: 'An unexpected error occurred. Please try again later.' }), {
+      status: 500,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
   }

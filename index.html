@@ -5,12 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NaijaTax IQ</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
 <style>
   :root {
     --green: #00a651;
     --green-dark: #007a3d;
     --green-light: #e6f7ee;
-    --white: #00a651;
+    --white: #ffffff;
     --gold: #f5a623;
     --gold-light: #fff8ec;
     --dark: #0d1f0f;
@@ -612,106 +613,6 @@
 
   /* ---- MOBILE RESPONSIVE ---- */
   @media (max-width: 480px) {
-    /* Header */
-    header {
-      padding: 0 1rem;
-      height: auto;
-      min-height: 56px;
-      flex-wrap: nowrap;
-      gap: 8px;
-    }
-    .logo {
-      font-size: 1.1rem;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .mode-toggle {
-      flex-shrink: 0;
-    }
-    .mode-btn {
-      padding: 5px 10px;
-      font-size: 0.75rem;
-    }
-
-    /* Hero */
-    .hero {
-      padding: 2rem 1rem 1.5rem;
-    }
-    .hero h1 {
-      font-size: 1.7rem;
-    }
-    .hero p {
-      font-size: 0.88rem;
-    }
-
-    /* Mode desc */
-    .mode-desc {
-      margin: 1rem 1rem 0;
-      font-size: 0.82rem;
-    }
-
-    /* Tabs */
-    .tabs {
-      padding: 0 0.5rem;
-      gap: 0;
-    }
-    .tab {
-      padding: 10px 10px;
-      font-size: 0.78rem;
-    }
-
-    /* Panels */
-    .panel {
-      padding: 1rem;
-    }
-
-    /* Cards */
-    .card {
-      padding: 1rem;
-    }
-
-    /* Chat */
-    .chat-messages {
-      height: 260px;
-    }
-    .chat-input-row input {
-      font-size: 0.85rem;
-    }
-
-    /* Result rows */
-    .result-row {
-      flex-direction: column;
-      gap: 2px;
-    }
-    .result-row .value {
-      font-size: 0.95rem;
-    }
-
-    /* Two col */
-    .two-col {
-      grid-template-columns: 1fr;
-    }
-
-    /* Popup */
-    .popup {
-      padding: 1.5rem;
-    }
-
-    /* Quiz options */
-    .quiz-opt {
-      font-size: 0.85rem;
-      padding: 10px 12px;
-    }
-
-    /* Buttons */
-    .btn {
-      font-size: 0.85rem;
-      padding: 10px 16px;
-    }
-  }
-
-  /* ---- MOBILE RESPONSIVE ---- */
-  @media (max-width: 480px) {
 
     /* Fix overflow */
     html, body { overflow-x: hidden; width: 100%; }
@@ -777,8 +678,8 @@
 <header>
   <div class="logo">Naija<span>Tax</span> IQ</div>
   <div class="mode-toggle">
-    <button class="mode-btn active" onclick="setMode('general')">General</button>
-    <button class="mode-btn" onclick="setMode('pro')">Professional</button>
+    <button class="mode-btn active" onclick="setMode('general', this)">General</button>
+    <button class="mode-btn" onclick="setMode('pro', this)">Professional</button>
   </div>
 </header>
 
@@ -997,8 +898,8 @@
 
     <div class="update-item">
       <div class="update-date">Nigeria Tax Act 2025 — Effective Jan 1, 2026</div>
-      <div class="update-title">CIT Rate Reduced to 25% for Non-Small Companies</div>
-      <div class="update-body">The previous two-tier structure (20% medium, 30% large) is replaced by a single 30% rate for all non-small companies. CGT for companies is also taxed at the CIT rate, while CGT for individuals follows the same progressive PIT bands.</div>
+      <div class="update-title">CIT Rate Remains at 30% for Non-Small Companies</div>
+      <div class="update-body">The previous two-tier structure (20% for medium companies, 30% for large companies) has been replaced by a single flat 30% rate for all non-small companies under NTA 2025. CGT for companies is also taxed at the CIT rate, while CGT for individuals follows the same progressive PIT bands.</div>
     </div>
 
     <div class="divider"></div>
@@ -1068,10 +969,10 @@ const funFacts = [
 ];
 
 // ========== MODE SWITCHING ==========
-function setMode(mode) {
+function setMode(mode, btn) {
   currentMode = mode;
   document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  btn.classList.add('active');
 
   const desc = document.getElementById('modeDesc');
   if (mode === 'general') {
@@ -1101,6 +1002,11 @@ function switchCalculator() {
   document.getElementById('calc-pit').style.display = type === 'pit' ? 'block' : 'none';
   document.getElementById('calc-vat').style.display = type === 'vat' ? 'block' : 'none';
   document.getElementById('calc-cit').style.display = type === 'cit' ? 'block' : 'none';
+
+  ['paye-salary','paye-pension','paye-rent','pit-income','pit-expenses','pit-pension','pit-rent','vat-amount','cit-profit'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.querySelectorAll('.result-box, .ai-response, .loading').forEach(el => el.classList.remove('show'));
 }
 
 async function calculatePIT() {
@@ -1291,7 +1197,7 @@ async function getAIExplanation(type, data) {
     });
     const d = await res.json();
     const text = d.text || 'Could not generate explanation.';
-    aiEl.innerHTML = `<div class="ai-label">NaijaTax IQ Explains</div>${text}`;
+    aiEl.innerHTML = `<div class="ai-label">NaijaTax IQ Explains</div>${marked.parse(text)}`;
     aiEl.classList.add('show');
   } catch (e) {
     aiEl.innerHTML = `<div class="ai-label">NaijaTax IQ</div>Unable to load AI explanation right now.`;
@@ -1327,10 +1233,10 @@ async function explainJargon() {
       })
     });
     const d = await res.json();
-    text.textContent = d.text || 'Could not explain this term.';
+    text.innerHTML = marked.parse(d.text || 'Could not explain this term.');
     result.classList.add('show');
   } catch (e) {
-    text.textContent = 'Unable to load explanation. Please try again.';
+    text.innerHTML = marked.parse('Unable to load explanation. Please try again.');
     result.classList.add('show');
   }
   load.classList.remove('show');
@@ -1352,7 +1258,6 @@ const proQuizPool = [
   { q: 'Transfer Pricing regulations in Nigeria are governed primarily by:', opts: ['FIRS TP Regulations 2012', 'CITA Section 22', 'Finance Act 2020', 'TADAT Framework'], ans: 0, exp: 'The Income Tax (Transfer Pricing) Regulations 2012 (amended 2018) is the primary TP framework in Nigeria, requiring arm\'s length pricing for related-party transactions.' },
   { q: 'What is the withholding tax rate on dividends paid to Nigerian resident individuals?', opts: ['5%', '7.5%', '10%', '15%'], ans: 2, exp: 'Dividends paid to Nigerian resident individuals attract a WHT rate of 10% which is a final tax. This is deducted at source by the paying company.' },
   { q: 'The Tertiary Education Tax (TET) is charged at what rate on assessable profits?', opts: ['1%', '2.5%', '3%', '5%'], ans: 1, exp: 'TET is charged at 2.5% of assessable profits of companies registered in Nigeria. It was increased from 2% by the Finance Act 2021.' },
-  { q: 'Under PITA, the Consolidated Relief Allowance is:', opts: ['₦200,000 only', '20% of gross income only', 'Higher of ₦200,000 or 20% of gross income + 1% of gross', 'Lower of ₦200,000 or 1% of gross income'], ans: 2, exp: 'The CRA is the higher of ₦200,000 or 1% of gross income, PLUS 20% of gross income. This is the most significant deduction available to employees.' },
 ];
 
 function setQuizMode(mode) { quizMode = mode; }
@@ -1444,7 +1349,7 @@ async function askUpdateAI() {
     });
     const d = await res.json();
     const text = d.text || 'Could not generate response.';
-    aiEl.innerHTML = `<div class="ai-label">NaijaTax IQ</div>${text}`;
+    aiEl.innerHTML = `<div class="ai-label">NaijaTax IQ</div>${marked.parse(text)}`;
     aiEl.classList.add('show');
   } catch (e) {
     aiEl.innerHTML = `<div class="ai-label">NaijaTax IQ</div>Unable to load response. Please try again.`;
@@ -1489,7 +1394,7 @@ async function sendChat() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         system,
-        messages: chatHistory
+        messages: chatHistory.slice(-10)
       })
     });
     const d = await res.json();
@@ -1499,7 +1404,7 @@ async function sendChat() {
     typing.remove();
     const aiMsg = document.createElement('div');
     aiMsg.className = 'msg ai';
-    aiMsg.textContent = text;
+    aiMsg.innerHTML = marked.parse(text);
     messagesEl.appendChild(aiMsg);
     messagesEl.scrollTop = messagesEl.scrollHeight;
   } catch (e) {
@@ -1513,7 +1418,7 @@ async function sendChat() {
 }
 
 // ========== POPUP ==========
-let popupTimer;
+let popupTimer = null;
 function showRandomPopup() {
   clearTimeout(popupTimer);
   popupTimer = setTimeout(() => {
@@ -1535,7 +1440,7 @@ function fmt(n) {
 
 // Init
 startQuiz();
-setTimeout(showRandomPopup, 12000);
+popupTimer = setTimeout(showRandomPopup, 12000);
 </script>
 </body>
 </html>
